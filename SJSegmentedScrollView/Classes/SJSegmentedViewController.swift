@@ -22,6 +22,10 @@
 
 import UIKit
 
+public protocol SJSegmentedSelectionDelegate{
+    func selectSegmentAtIndex(_ index: Int)
+}
+
 @objc public protocol SJSegmentedViewControllerDelegate {
     
     @objc optional func didSelectSegmentAtIndex(_ index:Int)
@@ -58,7 +62,7 @@ import UIKit
 /**
  *  Public class for customizing and setting our segmented scroll view
  */
-@objc open class SJSegmentedViewController: UIViewController {
+@objc open class SJSegmentedViewController: UIViewController, SJSegmentedSelectionDelegate {
     
     /**
      *  The headerview height for 'Header'.
@@ -224,7 +228,6 @@ import UIKit
     var viewObservers = [UIView]()
     var segmentedScrollView = SJSegmentedScrollView(frame: CGRect.zero)
     var segmentScrollViewTopConstraint: NSLayoutConstraint?
-    
     
     /**
      Custom initializer for SJSegmentedViewController.
@@ -425,4 +428,7 @@ import UIKit
                                  index: 0)
     }
     
+    public func selectSegmentAtIndex(_ index: Int) {
+        segmentedScrollView.contentView?.movePageToIndex(index, animated: true)
+    }
 }
