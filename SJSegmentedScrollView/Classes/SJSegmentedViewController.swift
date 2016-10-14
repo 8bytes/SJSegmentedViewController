@@ -52,7 +52,7 @@ import UIKit
      - returns: observe view
      */
     @objc optional func viewForSegmentControllerToObserveContentOffsetChange(_ controller: UIViewController,
-                                                                       index: Int) -> UIView
+                                                                             index: Int) -> UIView
 }
 
 /**
@@ -80,7 +80,7 @@ import UIKit
      *
      *  segmentedViewController.segmentViewHeight = 60.0
      */
-    open var segmentViewHeight: CGFloat = 40.0 {
+    open var segmentViewHeight: CGFloat = 0.0 {
         didSet {
             segmentedScrollView.segmentViewHeight = segmentViewHeight
         }
@@ -264,10 +264,19 @@ import UIKit
     
     override open func viewDidLoad() {
         super.viewDidLoad()
-        
+        edgesForExtendedLayout = .top
+        extendedLayoutIncludesOpaqueBars = true
         view.backgroundColor = UIColor.white
         automaticallyAdjustsScrollViewInsets = false
+        
         loadControllers()
+    }
+    
+    open override func viewWillAppear(_ animated: Bool) {
+        segmentedScrollView.segmentView?.isHidden = true
+        navigationController?.navigationBar.barTintColor = UIColor.clear
+        navigationController?.navigationBar.backgroundColor = UIColor.clear
+        navigationController?.navigationBar.isTranslucent = true
     }
     
     /**
@@ -275,6 +284,7 @@ import UIKit
      */
     override open func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
         
         let topSpacing = SJUtil.getTopSpacing(self)
         segmentedScrollView.topSpacing = topSpacing
@@ -314,16 +324,16 @@ import UIKit
         view.addSubview(segmentedScrollView)
         
         let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[scrollView]-0-|",
-                                                                                   options: [],
-                                                                                   metrics: nil,
-                                                                                   views: ["scrollView": segmentedScrollView])
+                                                                   options: [],
+                                                                   metrics: nil,
+                                                                   views: ["scrollView": segmentedScrollView])
         view.addConstraints(horizontalConstraints)
         
         let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[scrollView]-bp-|",
-                                                                                 options: [],
-                                                                                 metrics: ["tp": topSpacing,
-                                                                                    "bp": bottomSpacing],
-                                                                                 views: ["scrollView": segmentedScrollView])
+                                                                 options: [],
+                                                                 metrics: ["tp": topSpacing,
+                                                                           "bp": bottomSpacing],
+                                                                 views: ["scrollView": segmentedScrollView])
         view.addConstraints(verticalConstraints)
         
         segmentScrollViewTopConstraint = NSLayoutConstraint(item: segmentedScrollView,
@@ -377,16 +387,12 @@ import UIKit
             
             let delegate = controller as? SJSegmentedViewControllerViewSource
             var observeView = controller.view
-
-			if let collectionController = controller as? UICollectionViewController {
-				observeView = collectionController.collectionView
-			}
-
+            
             if let view = delegate?.viewForSegmentControllerToObserveContentOffsetChange!(controller,
                                                                                           index: index) {
                 observeView = view
             }
-
+            
             viewObservers.append(observeView!)
             segmentedScrollView.addObserverFor(observeView!)
             index += 1

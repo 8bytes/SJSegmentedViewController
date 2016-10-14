@@ -23,44 +23,32 @@
 import UIKit
 
 class SJUtil {
-
+    
     /**
      * Method to get topspacing of container,
-
+     
      - returns: topspace in float
      */
     static func getTopSpacing(_ viewController: UIViewController) -> CGFloat {
-
-
-        if let _ = viewController.splitViewController {
-            return 0
-        }
-
-        var topSpacing = UIApplication.shared.statusBarFrame.size.height
-
-        if let navigationController = viewController.navigationController {
-            if !navigationController.isNavigationBarHidden {
-                topSpacing += navigationController.navigationBar.bounds.height
-            }
-        }
-        return topSpacing
+        
+        return 0
     }
-
+    
     /**
      * Method to get bottomspacing of container
-
+     
      - returns: bottomspace in float
      */
     static func getBottomSpacing(_ viewController: UIViewController) -> CGFloat {
-
+        
         var bottomSpacing: CGFloat = 0.0
-
+        
         if let tabBarController = viewController.tabBarController {
             if !tabBarController.tabBar.isHidden {
                 bottomSpacing += tabBarController.tabBar.bounds.size.height
             }
         }
-
+        
         return bottomSpacing
     }
 }
