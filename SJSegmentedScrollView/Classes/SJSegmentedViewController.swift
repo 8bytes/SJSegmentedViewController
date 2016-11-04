@@ -236,9 +236,9 @@ public protocol SJSegmentedSelectionDelegate{
      - parameter segmentControllers:   Array of UIViewControllers for segments.
      
      */
-    convenience public init(headerViewController: UIViewController?,
+    public init(headerViewController: UIViewController?,
                             segmentControllers: [UIViewController]) {
-        self.init(nibName: nil, bundle: nil)
+        super.init(nibName: nil, bundle: nil)
         self.headerViewController = headerViewController
         self.segmentControllers = segmentControllers
         setDefaultValuesToSegmentedScrollView()
